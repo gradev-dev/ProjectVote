@@ -1,0 +1,276 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f2f3f5;
+}
+
+.with-bg {
+    background-image: url("bg.jpg");
+}
+
+.container {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+.container-voting {
+    width: 100vw;
+    margin: auto 0;
+    display: flex;
+}
+
+.container-voting-left {
+    height: 100vh;
+    width: 67vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-voting-right {
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 33vw;
+    height: 100vh;
+    text-align: center;
+    border-left: 1px solid #ccc;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.info {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #fff;
+    color: #0e2f4d;
+    padding: 10px 20px;
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    height: 50px;
+    box-sizing: border-box;
+}
+
+.position-top-0 {
+    top: 0;
+}
+
+.position-top-50 {
+    top: 50px;
+}
+
+.position-top-120 {
+    top: 120px;
+}
+
+.position-bottom-10 {
+    bottom: 0;
+}
+
+.room-info, .user-info {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#voting-controls {
+    display: flex;
+}
+
+#ownerControls {
+    text-align: center;
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    z-index: 1000;
+    width: 33vw;
+}
+
+#voteButtons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.vote-btn {
+    width: 100px;
+    height: 150px;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #0056b3;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.vote-selected {
+    transform: translateY(-1rem);
+}
+
+.vote-btn:hover {
+    background-color: #0056b3;
+    border: 1px solid #03458c;
+}
+
+/* Kontrola właściciela */
+.owner-controls {
+    margin-top: 10px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.round-btn {
+    padding: 10px;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #0056b3;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 300ms ease-in-out; /* Płynna animacja z czasem 2s */
+    text-transform: uppercase;
+}
+
+.round-btn:hover {
+    background-color: #0056b3;
+    border: 1px solid #03458c;
+}
+
+.btn {
+    padding: 1rem;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #0056b3;
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
+    text-transform: uppercase;
+}
+
+.btn.hidden {
+    display: none;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    border: 1px solid #03458c;
+}
+
+.hidden {
+    display: none;
+}
+
+.participants-list {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 3px;
+    gap: 8px;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+}
+
+.card {
+    width: 100%;
+    height: 50px;
+    position: relative;
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d; /* Zachowanie 3D dla obrotu */
+    transition: transform 1s ease-in-out; /* Płynna animacja z czasem 2s */
+}
+
+.card-face {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #d9d9d9;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.card-front {
+    background-color: #f8f9fa;
+    color: #2b2d30;
+    text-align: center;
+    z-index: 2;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.card-back {
+    display: grid;
+    text-align: center;
+    background-color: #f8f9fa;
+    color: #007bff;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    align-content: center;
+    grid-template-columns: 1fr 60px;
+}
+
+.card-back .vote {
+    font-size: 24px;
+    font-weight: bold;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-back .participant-name {
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
+}
+
+.card.revealed .card-inner {
+    transform: rotateY(180deg);
+}
+
+

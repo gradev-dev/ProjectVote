@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Room</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="container-voting">
+    <div class="container-voting-left">
+        <div id="voting-controls">
+            <div id="voteButtons">
+                <button class="vote-btn">1</button>
+                <button class="vote-btn">2</button>
+                <button class="vote-btn">3</button>
+                <button class="vote-btn">5</button>
+                <button class="vote-btn">8</button>
+                <button class="vote-btn">13</button>
+            </div>
+        </div>
+    </div>
+    <div class="container-voting-right" data-room-id="{{ .RoomID }}">
+        <div class="info position-top-0">
+            <div class="room-info">Room: <span id="roomName"></span></div>
+        </div>
+        <div class="info position-top-50">
+            <div class="user-info">Welcome, <span id="userName"></span>!</div>
+        </div>
+
+        <div id="participants" class="participants-list position-top-120"></div>
+    </div>
+</div>
+
+<script src="/js/voting.js"></script>
+</body>
+</html>
