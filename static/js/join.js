@@ -1,7 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector(".container");
     const roomId = container.dataset.roomId; // Odczyt z atrybutu data-room-id
-    const socket = new WebSocket("ws://localhost:8080/ws");
+    const body = document.querySelector("body");
+
+    let socket;
+
+    if (body && body.dataset.ws) {
+        const wsUrl = body.dataset.ws;
+        socket = new WebSocket(wsUrl);
+    } else {
+        console.error("Atrybut data-ws nie został znaleziony w elemencie <body>.");
+    }
 
     socket.onopen = () => {
         console.log("WebSocket connected to room:", roomId);
@@ -12,9 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const userName = document.getElementById("userName").value;
         const roomPassword = document.getElementById("roomPassword").value;
-
-        // Zapisanie nazwy użytkownika w sessionStorage
-        sessionStorage.setItem("userName", userName);
 
         socket.send(
             JSON.stringify({
@@ -28,12 +34,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-
-        if (data.error) {
-            alert(data.error);
-        } else {
-            console.log("Joined room:", data);
-            window.location.href = `/voting/${roomId}`;
+        if (data.type === "joinedRoom") {
+            console.log("Joined room:", data.roomName);
+            // Zapisanie nazwy użytkownika w sessionStorage
+            sessionStorage.setItem("userName", data.userName);
+            sessionStorage.setItem("userId", data.userId);
+            window.location.href = `/voting/${data.roomId}`;
         }
     };
 

@@ -5,10 +5,16 @@ document.getElementById("createRoomForm")?.addEventListener("submit", (e) => {
     const creatorName = document.getElementById("creatorName").value;
     const roomPassword = document.getElementById("roomPassword").value;
 
-    const socket = new WebSocket("ws://localhost:8080/ws");
+    const body = document.querySelector("body");
 
-    // Zapisanie nazwy użytkownika w sessionStorage
-    sessionStorage.setItem("userName", creatorName);
+    let socket;
+
+    if (body && body.dataset.ws) {
+        const wsUrl = body.dataset.ws;
+        socket = new WebSocket(wsUrl);
+    } else {
+        console.error("Atrybut data-ws nie został znaleziony w elemencie <body>.");
+    }
 
     socket.onopen = () => {
         socket.send(
@@ -24,8 +30,9 @@ document.getElementById("createRoomForm")?.addEventListener("submit", (e) => {
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.type === "roomCreated") {
-            console.log("Room created with ID:", data.roomId);
-            window.location.href = `/voting/${data.roomId}`;
+            sessionStorage.setItem("userName", data.creatorName);
+            sessionStorage.setItem("userId", data.creatorId);
+            window.location.href = `/voting-admin/${data.roomId}`;
         }
     };
 

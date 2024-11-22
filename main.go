@@ -1,7 +1,9 @@
 package main
 
 import (
+	"ProjectVote/config"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"sync"
@@ -19,10 +21,11 @@ type Message struct {
 	Vote     int    `json:"vote"`     // Głos (wartość Fibonacci)
 	Reveal   bool   `json:"reveal"`   // Czy odkryć głosy
 	Password string `json:"password"` // Hasło pokoju
+	UserID   string `json:"userId"`
 }
 
 type Participant struct {
-	Name string `json:"name"`
+	Name string `json:"name"` // Nazwa użytkownika
 	Vote int    `json:"vote"`
 }
 
@@ -98,7 +101,6 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	defer conn.Close()
 
 	var room *Room
-	var userName string
 
 	for {
 		var msg Message
@@ -112,9 +114,11 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 			// Usuń klienta i zaktualizuj pokój
 			if room != nil {
 				room.mu.Lock()
-				if userName != "" {
-					delete(room.Participants, userName)
-					log.Printf("User %s removed from room %s", userName, room.ID)
+				// Sprawdź, czy istnieje użytkownik powiązany z tym połączeniem
+				if userId, exists := room.Clients[conn]; exists {
+					// Usuń użytkownika z listy uczestników
+					delete(room.Participants, userId)
+					log.Printf("User %s removed from room %s", userId, room.ID)
 				}
 				delete(room.Clients, conn)
 				room.mu.Unlock()
@@ -133,16 +137,19 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		switch msg.Type {
 		case "create":
 			// Tworzenie pokoju
-			room = createRoom(msg.RoomName, msg.Password, msg.Name)
+			creatorID := uuid.New().String()
+			room = createRoom(msg.RoomName, msg.Password, creatorID)
 			room.mu.Lock()
-			room.Participants[msg.Name] = Participant{Name: msg.Name, Vote: 0}
-			room.Clients[conn] = msg.Name
+			room.Participants[creatorID] = Participant{Name: msg.Name, Vote: 0}
+			room.Clients[conn] = creatorID
 			room.mu.Unlock()
 
-			userName = msg.Name // Zapisz nazwę użytkownika
+			// Zapisz nazwę użytkownika
 			response := map[string]interface{}{
-				"type":   "roomCreated",
-				"roomId": room.ID,
+				"type":        "roomCreated",
+				"roomId":      room.ID,
+				"creatorName": msg.Name,
+				"creatorId":   creatorID,
 			}
 			conn.WriteJSON(response)
 
@@ -161,20 +168,25 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 
-			isOwner := (msg.Name == room.Creator)
+			isOwner := (msg.UserID == room.Creator)
+			if msg.UserID == "" {
+				msg.UserID = uuid.New().String()
+			}
 
 			room.mu.Lock()
-			room.Participants[msg.Name] = Participant{Name: msg.Name, Vote: 0}
-			room.Clients[conn] = msg.Name
+			room.Participants[msg.UserID] = Participant{Name: msg.Name, Vote: 0}
+			room.Clients[conn] = msg.UserID
 			room.mu.Unlock()
 
-			userName = msg.Name // Zapisz nazwę użytkownika
-			conn.WriteJSON(map[string]interface{}{
+			response := map[string]interface{}{
 				"type":     "joinedRoom",
 				"roomId":   room.ID,
-				"roomName": room.Name, // Dodaj nazwę pokoju
+				"roomName": room.Name,
 				"isOwner":  isOwner,
-			})
+				"userName": msg.Name,
+				"userId":   msg.UserID,
+			}
+			conn.WriteJSON(response)
 
 			// Aktualizuj listę uczestników dla wszystkich
 			broadcastMsg := map[string]interface{}{
@@ -191,9 +203,9 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 			room.mu.Lock()
-			if participant, exists := room.Participants[msg.Name]; exists {
+			if participant, exists := room.Participants[msg.UserID]; exists {
 				participant.Vote = msg.Vote
-				room.Participants[msg.Name] = participant
+				room.Participants[msg.UserID] = participant
 			}
 			room.mu.Unlock()
 
@@ -207,7 +219,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 		case "reveal":
 			// Odkrywanie głosów - tylko twórca
-			if room == nil || msg.Name != room.Creator {
+			if room == nil || msg.UserID != room.Creator {
 				conn.WriteJSON(map[string]string{"error": "Only the room creator can reveal votes"})
 				break
 			}
@@ -219,12 +231,13 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				"type":         "update",
 				"participants": room.Participants,
 				"reveal":       room.Reveal,
+				"reset":        false,
 			}
 			room.Broadcast(broadcastMsg)
 
 		case "reset":
 			// Resetowanie pokoju - tylko twórca
-			if room == nil || msg.Name != room.Creator {
+			if room == nil || msg.UserID != room.Creator {
 				conn.WriteJSON(map[string]string{"error": "Only the room creator can reset"})
 				break
 			}
@@ -239,6 +252,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				"type":         "update",
 				"participants": room.Participants,
 				"reveal":       room.Reveal,
+				"reset":        true,
 			}
 			room.Broadcast(broadcastMsg)
 		}
@@ -246,6 +260,11 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	env, envErr := config.Get()
+	if envErr != nil {
+		panic(envErr)
+	}
+
 	// Tworzenie routera
 	r := gin.Default()
 
@@ -258,22 +277,79 @@ func main() {
 
 	// Strona główna (tworzenie pokoju)
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "create.html", nil)
+		c.HTML(http.StatusOK, "create.html", gin.H{
+			"AppName": env.App,
+			"Ws":      fmt.Sprintf("ws://%v/ws", env.Url),
+		})
 	})
 
 	// Strona dołączania do pokoju
 	r.GET("/join/:roomId", func(c *gin.Context) {
 		roomID := c.Param("roomId")
+		roomsMu.Lock()
+		room, exists := rooms[roomID]
+		roomsMu.Unlock()
+
+		if !exists {
+			c.HTML(http.StatusOK, "error.html", gin.H{
+				"AppName": env.App,
+				"RoomID":  roomID,
+			})
+			return
+		}
+
 		c.HTML(http.StatusOK, "join.html", gin.H{
-			"RoomID": roomID,
+			"AppName":  env.App,
+			"RoomID":   roomID,
+			"RoomName": room.Name,
+			"Ws":       fmt.Sprintf("ws://%v/ws", env.Url),
 		})
 	})
 
 	// Strona głosowania
 	r.GET("/voting/:roomId", func(c *gin.Context) {
 		roomID := c.Param("roomId")
+		roomsMu.Lock()
+		room, exists := rooms[roomID]
+		roomsMu.Unlock()
+
+		if !exists {
+			c.HTML(http.StatusOK, "error.html", gin.H{
+				"AppName": env.App,
+				"RoomID":  roomID,
+			})
+			return
+		}
+
 		c.HTML(http.StatusOK, "voting.html", gin.H{
-			"RoomID": roomID,
+			"AppName":  env.App,
+			"RoomID":   roomID,
+			"RoomName": room.Name,
+			"Ws":       fmt.Sprintf("ws://%v/ws", env.Url),
+			"Js":       "voting",
+		})
+	})
+
+	r.GET("/voting-admin/:roomId", func(c *gin.Context) {
+		roomID := c.Param("roomId")
+		roomsMu.Lock()
+		room, exists := rooms[roomID]
+		roomsMu.Unlock()
+
+		if !exists {
+			c.HTML(http.StatusOK, "error.html", gin.H{
+				"AppName": env.App,
+				"RoomID":  roomID,
+			})
+			return
+		}
+
+		c.HTML(http.StatusOK, "voting.html", gin.H{
+			"AppName":  env.App,
+			"RoomID":   roomID,
+			"RoomName": room.Name,
+			"Ws":       fmt.Sprintf("ws://%v/ws", env.Url),
+			"Js":       "votingAdmin",
 		})
 	})
 

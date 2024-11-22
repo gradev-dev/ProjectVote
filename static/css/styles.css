@@ -149,20 +149,29 @@ input {
 }
 
 .round-btn {
-    padding: 10px;
-    width: 100%;
-    background-color: #007bff;
-    color: white;
-    border: 1px solid #0056b3;
+    position: relative;
+    display: inline-block;
+    padding: 0.5rem 2rem;
+    border: 1px solid rgb(255, 198, 0);
     border-radius: 4px;
-    cursor: pointer;
-    transition: all 300ms ease-in-out; /* Płynna animacja z czasem 2s */
+    box-sizing: border-box;
+    font-family: poppinsbold, Lato, sans-serif;
+    font-size: 0.875rem;
+    line-height: 20px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
     text-transform: uppercase;
+    text-align: center;
+    color: rgb(25, 25, 25);
+    background-color: rgb(255, 208, 36);
+    transition: background 0.5s, color, opacity 0.5s;
+    cursor: pointer;
+    width: 100%;
 }
 
 .round-btn:hover {
-    background-color: #0056b3;
-    border: 1px solid #03458c;
+    background-color: #fdda58;
+    border: 1px solid rgb(255, 198, 0);
 }
 
 .btn {

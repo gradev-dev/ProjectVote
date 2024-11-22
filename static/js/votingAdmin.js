@@ -49,15 +49,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
         switch (data.type) {
             case "joinedRoom":
+                // Wyświetl nazwę pokoju z backendu
                 document.getElementById("roomName").textContent = data.roomName;
                 document.getElementById("userName").textContent = userName;
+                console.log(`Joined room: ${data.roomName}`);
+                // Sprawdź, czy użytkownik jest właścicielem pokoju
+                if (data.isOwner) {
+                    console.log("You are the owner of this room.");
+                    addOwnerControls(socket, roomId, userUUID);
+                }
                 break;
 
             case "update":
+                // Zaktualizuj listę uczestników
                 updateParticipants(data.participants, data.reveal, data.reset);
                 break;
 
             case "error":
+                // Obsługa błędu
+                console.error("Error received:", data.message);
                 alert(data.message);
                 break;
 
@@ -86,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Tworzenie kontenera dla karty
             const card = document.createElement("div");
             card.className = "card";
-
+            console.log(uuid);
             // Dodanie obiektu wewnętrznego dla obrotu
             const cardInner = document.createElement("div");
             cardInner.className = "card-inner";
@@ -110,20 +120,55 @@ document.addEventListener("DOMContentLoaded", () => {
             nameDiv.className = "participant-name";
             nameDiv.textContent = participant.name;
 
+            // Dodanie głosu i imienia do tylnej strony karty
             cardBack.appendChild(nameDiv);
             cardBack.appendChild(voteDiv);
 
+            // Dodanie stron do wnętrza karty
             cardInner.appendChild(cardFront);
             cardInner.appendChild(cardBack);
             card.appendChild(cardInner);
 
+            // Jeśli głosy są odkryte, dodaj klasę "revealed"
             if (reveal) {
                 setTimeout(() => card.classList.add("revealed"), 100); // Płynne dodanie klasy z opóźnieniem
                 const buttons = document.querySelectorAll('.vote-btn');
                 buttons.forEach(btn => btn.setAttribute('disabled', ''));
             }
 
+            // Dodanie karty do listy uczestników
             list.appendChild(card);
         }
+    };
+
+    const addOwnerControls = (socket, roomId, userId) => {
+        const controlsContainer = document.createElement("div");
+        controlsContainer.id = "ownerControls";
+        controlsContainer.className = "position-bottom-10";
+
+        // Przycisk "Reveal Votes"
+        const revealButton = document.createElement("button");
+        revealButton.id = "revealBtn";
+        revealButton.textContent = "Reveal Votes";
+        revealButton.className = "btn";
+        revealButton.addEventListener("click", () => {
+            socket.send(JSON.stringify({ type: "reveal", roomId, userId: userId }));
+        });
+
+        // Przycisk "Reset Room"
+        const resetButton = document.createElement("button");
+        resetButton.id = "resetBtn";
+        resetButton.textContent = "Reset Room";
+        resetButton.className = "btn";
+        resetButton.addEventListener("click", () => {
+            socket.send(JSON.stringify({ type: "reset", roomId, userId: userId }));
+        });
+
+        // Dodaj przyciski do kontenera
+        controlsContainer.appendChild(revealButton);
+        controlsContainer.appendChild(resetButton);
+
+        // Dodaj kontener do DOM
+        container.appendChild(controlsContainer);
     };
 });
