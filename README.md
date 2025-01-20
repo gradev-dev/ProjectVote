@@ -1,6 +1,6 @@
-# Planning Poker 🎴
+# Project Vote 🎴
 
-Planning Poker to aplikacja do wyceny zadań w zespołach. Wspiera wyceny w systemie liczb Fibonacciego, ułatwiając zespołowi osiągnięcie konsensusu podczas wycen.
+Project Vote to aplikacja do wyceny zadań w zespołach. Wspiera wyceny w systemie liczb Fibonacciego, ułatwiając zespołowi osiągnięcie konsensusu podczas wycen.
 
 ## Funkcje ✨
 
@@ -22,8 +22,8 @@ Planning Poker to aplikacja do wyceny zadań w zespołach. Wspiera wyceny w syst
 
 1. **Sklonuj repozytorium**:
    ```bash
-   git clone https://git.dcwp.pl/wakacje/tools/planningpoker.git
-   cd planningpoker
+   git clone https://github.com/gradev-dev/ProjectVote.git
+   cd ProjectVote
    ```
 2. **Utwórz lokalną kopię pliku `.env`**:
    ```bash
