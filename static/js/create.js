@@ -4,6 +4,7 @@ document.getElementById("createRoomForm")?.addEventListener("submit", (e) => {
     const roomName = document.getElementById("roomName").value;
     const creatorName = document.getElementById("creatorName").value;
     const roomPassword = document.getElementById("roomPassword").value;
+    const roomMethod = document.getElementById("roomMethod").value;
 
     const body = document.querySelector("body");
 
@@ -20,9 +21,10 @@ document.getElementById("createRoomForm")?.addEventListener("submit", (e) => {
         socket.send(
             JSON.stringify({
                 type: "create",
-                roomName,
-                name: creatorName,
+                room_name : roomName,
+                user_name: creatorName,
                 password: roomPassword,
+                room_method: roomMethod,
             })
         );
     };
@@ -30,9 +32,10 @@ document.getElementById("createRoomForm")?.addEventListener("submit", (e) => {
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.type === "roomCreated") {
-            sessionStorage.setItem("userName", data.creatorName);
-            sessionStorage.setItem("userId", data.creatorId);
-            window.location.href = `/voting-admin/${data.roomId}`;
+            sessionStorage.setItem("sessionUUID", data.user.id);
+            sessionStorage.setItem("sessionUser", data.user.name);
+            sessionStorage.setItem("roomPassword", roomPassword);
+            window.location.href = `/voting/${data.room.id}`;
         }
     };
 

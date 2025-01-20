@@ -4,13 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .AppName }}</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/css/images/favicon.ico" type="image/x-icon">
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/css/images/apple-touch-icon.png">
+
+    <!-- Dodatkowe meta dane dla Apple -->
+    <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body class="with-bg">
+<body class="with-bg animated-bg">
 <div class="container">
     <h1>Error</h1>
-    <p>Room ID: {{ .RoomID }}</p>
-    <p>Not exists!</p>
+    <div class="not-found-icon"></div>
+    <a href="/" class="btn-back">Back to home page</a>
 </div>
 </body>
 </html>

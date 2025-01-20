@@ -4,13 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .AppName }} | {{ .RoomName }}</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/css/images/favicon.ico" type="image/x-icon">
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/css/images/apple-touch-icon.png">
+
+    <!-- Dodatkowe meta dane dla Apple -->
+    <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body class="with-bg" data-ws="{{ .Ws }}">
+<body class="with-bg animated-bg" data-ws="{{ .Ws }}">
 <div class="container" data-room-id="{{ .RoomID }}">
     <h1>Join Room</h1>
-    <p>Room ID: {{ .RoomID }}</p>
-    <form id="joinRoomForm">
+    <b class="room-join-name">{{ .RoomName }}</b>
+    <form id="joinRoomForm" autocomplete="off">
         <input type="text" id="userName" placeholder="Your Name" required>
         <input type="password" id="roomPassword" placeholder="Room Password (if required)">
         <button type="submit" class="round-btn">Join Room</button>

@@ -4,15 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .AppName }}</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/css/images/favicon.ico" type="image/x-icon">
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/css/images/apple-touch-icon.png">
+
+    <!-- Dodatkowe meta dane dla Apple -->
+    <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body class="with-bg" data-ws="{{ .Ws }}">
+<body class="with-bg animated-bg" data-ws="{{ .Ws }}">
 <div class="container">
     <h1>Create a Room</h1>
-    <form id="createRoomForm">
+    <form id="createRoomForm" autocomplete="off">
         <input type="text" id="roomName" placeholder="Room Name" required>
         <input type="text" id="creatorName" placeholder="Your Name" required>
         <input type="password" id="roomPassword" placeholder="Optional: Room Password">
+        <label for="roomMethod" class="select-method-label">Choose a voting method</label>
+        <select class="form-select" id="roomMethod">
+            <option selected value="fibonacci">Fibonacci</option>
+            <option value="tshirts">T-Shirts</option>
+        </select>
         <button type="submit" class="round-btn">Create Room</button>
     </form>
 </div>

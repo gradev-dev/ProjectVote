@@ -1,0 +1,85 @@
+.chroma .hl { color: #f8f8f2; background-color: #272822; }
+.chroma .c { color: #75715e; font-style: italic; } /* Comment */
+.chroma .err { color: #960050; background-color: #1e0010; } /* Error */
+.chroma .k { color: #66d9ef; } /* Keyword */
+.chroma .l { color: #ae81ff; } /* Literal */
+.chroma .n { color: #f8f8f2; } /* Name */
+.chroma .o { color: #f92672; } /* Operator */
+.chroma .p { color: #f8f8f2; } /* Punctuation */
+.chroma .cm { color: #75715e; font-style: italic; } /* Comment.Multiline */
+.chroma .cp { color: #75715e; font-style: italic; } /* Comment.Preproc */
+.chroma .cpf { color: #75715e; font-style: italic; } /* Comment.PreprocFile */
+.chroma .c1 { color: #75715e; font-style: italic; } /* Comment.Single */
+.chroma .cs { color: #75715e; font-style: italic; } /* Comment.Special */
+.chroma .gd { color: #f92672; } /* Generic.Deleted */
+.chroma .ge { font-style: italic; } /* Generic.Emph */
+.chroma .gr { color: #f92672; } /* Generic.Error */
+.chroma .gh { color: #66d9ef; font-weight: bold; } /* Generic.Heading */
+.chroma .gi { color: #a6e22e; } /* Generic.Inserted */
+.chroma .go { color: #75715e; } /* Generic.Output */
+.chroma .gp { color: #66d9ef; font-weight: bold; } /* Generic.Prompt */
+.chroma .gs { font-weight: bold; } /* Generic.Strong */
+.chroma .gu { color: #66d9ef; font-weight: bold; } /* Generic.Subheading */
+.chroma .gt { color: #f92672; } /* Generic.Traceback */
+.chroma .kc { color: #66d9ef; } /* Keyword.Constant */
+.chroma .kd { color: #66d9ef; } /* Keyword.Declaration */
+.chroma .kn { color: #f92672; } /* Keyword.Namespace */
+.chroma .kp { color: #66d9ef; } /* Keyword.Pseudo */
+.chroma .kr { color: #66d9ef; } /* Keyword.Reserved */
+.chroma .kt { color: #66d9ef; } /* Keyword.Type */
+.chroma .ld { color: #e6db74; } /* Literal.Date */
+.chroma .m { color: #ae81ff; } /* Literal.Number */
+.chroma .s { color: #e6db74; } /* Literal.String */
+.chroma .na { color: #a6e22e; } /* Name.Attribute */
+.chroma .nb { color: #f8f8f2; } /* Name.Builtin */
+.chroma .nc { color: #a6e22e; } /* Name.Class */
+.chroma .no { color: #66d9ef; } /* Name.Constant */
+.chroma .nd { color: #a6e22e; } /* Name.Decorator */
+.chroma .ni { color: #f8f8f2; } /* Name.Entity */
+.chroma .ne { color: #a6e22e; } /* Name.Exception */
+.chroma .nf { color: #a6e22e; } /* Name.Function */
+.chroma .nl { color: #f8f8f2; } /* Name.Label */
+.chroma .nn { color: #a6e22e; } /* Name.Namespace */
+.chroma .nx { color: #a6e22e; } /* Name.Other */
+.chroma .py { color: #f8f8f2; } /* Name.Property */
+.chroma .nt { color: #f92672; } /* Name.Tag */
+.chroma .nv { color: #f8f8f2; } /* Name.Variable */
+.chroma .ow { color: #f92672; } /* Operator.Word */
+.chroma .w { color: #f8f8f2; } /* Text.Whitespace */
+.chroma .mb { color: #ae81ff; } /* Literal.Number.Bin */
+.chroma .mf { color: #ae81ff; } /* Literal.Number.Float */
+.chroma .mh { color: #ae81ff; } /* Literal.Number.Hex */
+.chroma .mi { color: #ae81ff; } /* Literal.Number.Integer */
+.chroma .mo { color: #ae81ff; } /* Literal.Number.Oct */
+.chroma .sb { color: #e6db74; } /* Literal.String.Backtick */
+.chroma .sc { color: #e6db74; } /* Literal.String.Char */
+.chroma .sd { color: #e6db74; } /* Literal.String.Doc */
+.chroma .s2 { color: #e6db74; } /* Literal.String.Double */
+.chroma .se { color: #e6db74; } /* Literal.String.Escape */
+.chroma .sh { color: #e6db74; } /* Literal.String.Heredoc */
+.chroma .si { color: #e6db74; } /* Literal.String.Interpol */
+.chroma .sx { color: #e6db74; } /* Literal.String.Other */
+.chroma .sr { color: #e6db74; } /* Literal.String.Regex */
+.chroma .s1 { color: #e6db74; } /* Literal.String.Single */
+.chroma .ss { color: #e6db74; } /* Literal.String.Symbol */
+
+pre {
+    counter-reset: line-number;
+    background-color: #323232;
+    padding: 10px;
+    border: 1px solid #2b2d30;
+    border-radius: .25rem;
+}
+
+pre code .line::before {
+    counter-increment: line-number;
+    content: counter(line-number) ".";
+    width: 40px;
+    color: #7a7a7a;
+    display: inline-block;
+    text-align: right;
+    padding-right: 8px;
+    margin-right: 10px;
+    box-sizing: border-box;
+    border-right: 1px solid #4b4b4b;
+}

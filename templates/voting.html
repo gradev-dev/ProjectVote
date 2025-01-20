@@ -4,34 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .AppName }} | {{ .RoomName }}</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/css/images/favicon.ico" type="image/x-icon">
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/css/images/apple-touch-icon.png">
+
+    <!-- Dodatkowe meta dane dla Apple -->
+    <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/chroma.css">
+    <link rel="stylesheet" href="/css/jira.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-<body data-ws="{{ .Ws }}">
+<body class="with-bg" data-ws="{{ .Ws }}">
 <div class="container-voting">
     <div class="container-voting-left">
-        <div id="voting-controls">
-            <div id="voteButtons">
-                <button class="vote-btn">1</button>
-                <button class="vote-btn">2</button>
-                <button class="vote-btn">3</button>
-                <button class="vote-btn">5</button>
-                <button class="vote-btn">8</button>
-                <button class="vote-btn">13</button>
+        <div class="room-info">
+            <div class="room-info-detal-contain">
+                <div class="room-info-detal">Room: <span id="roomName">{{.RoomName}}</span></div>
+                <div id="historyButtons">
+                    <button class="room-info-btn"><i class="bi bi-clock-history"></i></button>
+                </div>
+            </div>
+            <div id="history" class="room-history">
+                <div id="votes-history"></div>
             </div>
         </div>
+        <div id="voting-controls"></div>
     </div>
-    <div class="container-voting-right" data-room-id="{{ .RoomID }}">
+    <div class="container-voting-right" data-room-id="{{ .RoomID }}" data-room-method="{{ .RoomMethod }}">
         <div class="info position-top-0">
-            <div class="room-info">Room: <span id="roomName"></span></div>
-        </div>
-        <div class="info position-top-50">
             <div class="user-info">Welcome, <span id="userName"></span>!</div>
         </div>
+        <div class="info position-top-50">
+            <div class="project-info-admin">
+                <button id="taskInfoBtn" class="task-info-btn"><i class="bi bi-info-square-fill"></i></button>
+                <input id="projectInput" type="text" placeholder="project task not set">
+                <div id="projectLoadingIndicator" style="display: none"><i class="bi bi-arrow-repeat"></i></div>
+                <div id="projectStatus" style="display: none"><i class="bi bi-check2-circle"></i></div>
+            </div>
+        </div>
 
-        <div id="participants" class="participants-list position-top-120"></div>
+        <div id="average"></div>
+
+        <div id="participants" class="participants-list position-top-140"></div>
     </div>
 </div>
-
-<script src="/js/{{ .Js }}.js"></script>
+<div id="modal" class="modal modal-deactive">
+    <div class="modal-content"></div>
+</div>
+<script src="/js/voting.js"></script>
 </body>
 </html>

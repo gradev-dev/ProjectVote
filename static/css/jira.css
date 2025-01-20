@@ -1,0 +1,137 @@
+.smile,
+.sad,
+.tongue,
+.biggrin,
+.wink,
+.thumbsup,
+.thumbsdown,
+.information,
+.check,
+.error,
+.warning,
+.add,
+.forbidden,
+.help16,
+.lightbulbon,
+.lightbulb,
+.staryellow,
+.starred,
+.stargreen,
+.starblue,
+.flag,
+.flaggrey {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    background-size: cover;
+}
+
+.smile { background-image: url('icons/smile.png'); }
+.sad { background-image: url('icons/sad.png'); }
+.tongue { background-image: url('icons/tongue.png'); }
+.biggrin { background-image: url('icons/biggrin.png'); }
+.wink { background-image: url('icons/wink.png'); }
+.thumbsup { background-image: url('icons/thumbs_up.png'); }
+.thumbsdown { background-image: url('icons/thumbs_down.png'); }
+.information { background-image: url('icons/information.png'); }
+.check { background-image: url('icons/check.png'); }
+.error { background-image: url('icons/error.png'); }
+.warning { background-image: url('icons/warning.png'); }
+.add { background-image: url('icons/add.png'); }
+.forbidden { background-image: url('icons/forbidden.png'); }
+.help16 { background-image: url('icons/help_16.png'); }
+.lightbulbon { background-image: url('icons/lightbulb_on.png'); }
+.lightbulb { background-image: url('icons/lightbulb.png'); }
+.staryellow { background-image: url('icons/star_yellow.png'); }
+.starred { background-image: url('icons/star_red.png'); }
+.stargreen { background-image: url('icons/star_green.png'); }
+.starblue { background-image: url('icons/star_blue.png'); }
+.flag { background-image: url('icons/flag.png'); }
+.flaggrey { background-image: url('icons/flag_grey.png'); }
+
+.panel {
+    position: relative;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    margin: 20px 0;
+    overflow: hidden;
+    max-height: 300px;
+}
+
+.panel:hover {
+    overflow-y: auto;
+}
+
+.panel::-webkit-scrollbar {
+    width: 5px;
+    background: transparent;
+}
+
+.panel::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.panel:hover::-webkit-scrollbar-thumb {
+    opacity: 1;
+}
+
+.panel::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.panel-title {
+    position: sticky;
+    top: 0;
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 10px;
+    font-size: 16px;
+    border-bottom: 1px solid #ccc;
+}
+
+.panel-content {
+    padding: 20px;
+}
+
+pre.no-format {
+    background-color: #e0e0e0;
+    padding: 15px;
+    border: 1px solid #ccc;
+    overflow: auto;
+    white-space: pre-wrap;
+}
+
+.jira-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+.jira-table th, .jira-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.jira-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    text-align: center;
+}
+
+.jira-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.jira-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.jira-table td {
+    vertical-align: top;
+}

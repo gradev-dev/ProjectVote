@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector(".container");
-    const roomId = container.dataset.roomId; // Odczyt z atrybutu data-room-id
+    const roomId = container.dataset.roomId;
     const body = document.querySelector("body");
 
     let socket;
@@ -13,20 +13,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     socket.onopen = () => {
-        console.log("WebSocket connected to room:", roomId);
+        socket.send(
+            JSON.stringify({
+                type: "check",
+                room_id: roomId,
+            })
+        );
     };
+
+    const passwordInput = document.getElementById("roomPassword");
 
     document.getElementById("joinRoomForm")?.addEventListener("submit", (e) => {
         e.preventDefault();
 
         const userName = document.getElementById("userName").value;
         const roomPassword = document.getElementById("roomPassword").value;
-
+        sessionStorage.setItem("roomPassword", roomPassword);
         socket.send(
             JSON.stringify({
                 type: "join",
-                roomId: roomId,
-                name: userName,
+                room_id: roomId,
+                user_name: userName,
                 password: roomPassword,
             })
         );
@@ -34,12 +41,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        if (data.type === "joinedRoom") {
-            console.log("Joined room:", data.roomName);
-            // Zapisanie nazwy użytkownika w sessionStorage
-            sessionStorage.setItem("userName", data.userName);
-            sessionStorage.setItem("userId", data.userId);
-            window.location.href = `/voting/${data.roomId}`;
+        switch (data.type) {
+            case "joinedRoom":
+                const roomPassword = document.getElementById("roomPassword").value;
+                sessionStorage.setItem("sessionUUID", data.user.id);
+                sessionStorage.setItem("sessionUser", data.user.name);
+                sessionStorage.setItem("roomPassword", roomPassword);
+                window.location.href = `/voting/${data.room.id}`;
+                break;
+            case "info":
+                if (!data.has_password) {
+                    passwordInput.style.display = "none";
+                }
+                break;
         }
     };
 
