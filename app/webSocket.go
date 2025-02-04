@@ -5,12 +5,13 @@ import (
 	"Planning_poker/app/models"
 	"Planning_poker/app/utils"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 )
 
 var upgrade = websocket.Upgrader{
@@ -248,13 +249,11 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 func keepAlive(conn *websocket.Conn, interval time.Duration) {
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
-	for {
-		select {
-		case <-ticker.C:
-			if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
-				log.Println("Ping failed:", err)
-				return
-			}
+
+	for range ticker.C {
+		if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+			log.Println("Ping failed:", err)
+			return
 		}
 	}
 }

@@ -2,13 +2,17 @@ package main
 
 import (
 	"Planning_poker/app"
+	"Planning_poker/app/logging"
 	"Planning_poker/app/models"
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"log"
+	"log/slog"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	sloggin "github.com/samber/slog-gin"
 )
 
 func main() {
@@ -17,8 +21,16 @@ func main() {
 		panic(envErr)
 	}
 
+	if err := logging.InitLogging(env); err != nil {
+		panic(err)
+	}
+
 	// Tworzenie routera
-	r := gin.Default()
+	r := gin.New()
+	r.Use(
+		sloggin.New(slog.Default().WithGroup("server")),
+		gin.Recovery(),
+	)
 
 	// Ładowanie szablonów HTML
 	r.LoadHTMLGlob("templates/*")
